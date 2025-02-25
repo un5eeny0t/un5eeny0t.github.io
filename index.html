@@ -16,9 +16,22 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
         }
 
-        /* Card-style Container */
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Container */
         .container {
             background: white;
             padding: 40px;
@@ -26,6 +39,8 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             max-width: 400px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
         }
 
         /* Heading */
@@ -33,6 +48,7 @@
             margin: 0;
             font-size: 2em;
             color: #222;
+            transition: transform 0.3s ease-in-out;
         }
 
         /* Subtext */
@@ -40,14 +56,21 @@
             font-size: 1em;
             color: #666;
             margin-top: 10px;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+
+        /* Hover effect */
+        h1:hover {
+            transform: scale(1.1);
+            color: #007bff;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome!</h1>
-        <p>Simple. Clean. Minimal.</p>
+        <p>Simple. Clean. Animated.</p>
     </div>
 </body>
 </html>
-

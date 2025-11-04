@@ -1,30 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>un5eeny0t</title>
   <style>
+    :root {
+      --fg: #e0e0e0;
+      --accent: #00bfff;
+      --bg-1: #0f0f1a;
+      --bg-2: #000;
+    }
+
+    /* Full-screen canvas background */
+    canvas#globe {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.95;
+      backdrop-filter: blur(0px);
+    }
+
+    /* Page content sits on top */
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: radial-gradient(circle at top, #0f0f1a, #000);
-      color: #e0e0e0;
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, "Helvetica Neue", Arial;
+      color: var(--fg);
+      background: radial-gradient(circle at top, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      overflow-x: hidden;
+      z-index: 2;
+    }
+
+    main {
+      position: relative;
+      z-index: 2; /* above canvas */
+      width: 100%;
+      max-width: 1100px;
+      padding: 40px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     header {
-      margin-top: 60px;
+      margin-top: 48px;
       text-align: center;
-      opacity: 1;
     }
 
+    /* Typewriter stays stable */
     #typewriter {
       display: inline-block;
       min-height: 1.2em;
@@ -36,177 +68,542 @@
     }
 
     h1 {
-      font-size: 2.8em;
-      color: #00bfff;
-      text-shadow: 0 0 15px #00bfff, 0 0 25px #0080ff;
+      font-size: clamp(28px, 4vw, 44px);
       margin: 0;
-      animation: glowPulse 3s infinite alternate;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-shadow: 0 0 12px #00bfff60, 0 0 30px #0080ff30;
     }
 
-    @keyframes glowPulse {
-      from { text-shadow: 0 0 10px #00bfff, 0 0 20px #0080ff; }
-      to { text-shadow: 0 0 25px #00bfff, 0 0 50px #0040ff; }
-    }
-
-    p {
-      font-size: 1.1em;
-      color: #aaa;
-      margin-top: 10px;
+    p.lead {
+      margin-top: 8px;
+      color: #bdbdbd;
     }
 
     .repo-container {
-      margin-top: 40px;
+      margin-top: 36px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      width: 90%;
-      max-width: 1000px;
-      padding-bottom: 60px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .repo-card {
-      background: rgba(20, 20, 35, 0.8);
-      border: 1px solid #00bfff55;
+      background: rgba(10, 12, 20, 0.55);
+      border: 1px solid rgba(0, 191, 255, 0.12);
+      padding: 18px;
       border-radius: 12px;
-      padding: 20px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      transition: transform 180ms ease, box-shadow 180ms ease;
     }
 
     .repo-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
-      border-color: #00bfff;
+      transform: translateY(-6px);
+      box-shadow: 0 12px 36px rgba(0, 191, 255, 0.18);
+      border-color: rgba(0,191,255,0.32);
     }
 
     .repo-card h2 {
-      font-size: 1.2em;
-      margin: 0 0 10px 0;
-      color: #00bfff;
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      color: var(--accent);
     }
 
     .repo-card p {
-      font-size: 0.9em;
-      color: #bbb;
+      margin: 0 0 12px 0;
+      color: #d0d0d0;
+      font-size: 14px;
     }
 
     .repo-card a {
       display: inline-block;
-      margin-top: 10px;
+      padding: 6px 10px;
+      border-radius: 8px;
       text-decoration: none;
-      color: #00bfff;
-      border: 1px solid #00bfff;
-      border-radius: 6px;
-      padding: 5px 10px;
-      transition: 0.3s;
-    }
-
-    .repo-card a:hover {
-      background: #00bfff;
-      color: #000;
+      color: #001;
+      background: var(--accent);
+      font-weight: 600;
+      font-size: 13px;
     }
 
     footer {
-      color: #666;
-      font-size: 0.9em;
-      padding: 20px;
-      text-align: center;
+      margin: 36px 0 20px 0;
+      color: #9a9a9a;
+      font-size: 13px;
+    }
+
+    /* small screens */
+    @media (max-width:600px) {
+      main { padding: 28px 12px; }
+      .repo-card { padding: 14px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1 id="typewriter"></h1>
-    <p>Network Security Engineer | Researcher</p>
-  </header>
+  <!-- Animated globe canvas -->
+  <canvas id="globe"></canvas>
 
-  <section class="repo-container" id="repo-list">
-    <!-- Repos will load here -->
-  </section>
+  <main>
+    <header>
+      <h1 id="typewriter"></h1>
+      <p class="lead">Network Security Engineer | Researcher</p>
+    </header>
 
-  <footer>
-    © 2025 un5eeny0t | <a href="https://github.com/un5eeny0t" style="color:#00bfff;">GitHub</a>
-  </footer>
+    <section class="repo-container" id="repo-list" aria-live="polite">
+      <!-- Repo cards inserted by JS -->
+    </section>
+
+    <footer>© 2025 un5eeny0t | <a href="https://github.com/un5eeny0t" style="color: #00bfff; text-decoration:none;">GitHub</a></footer>
+  </main>
 
   <script>
-  // List of "Welcome" in different languages with colors
-  const messages = [
-    { text: "Welcome", color: "#00bfff" },           // English - blue
-    { text: "Selamat Datang", color: "#00ff99" },    // Malay - green
-    { text: "Bienvenido", color: "#ffcc00" },        // Spanish - yellow
-    { text: "Bienvenue", color: "#ff66ff" },         // French - pink
-    { text: "Willkommen", color: "#ff6600" },        // German - orange
-    { text: "ようこそ", color: "#00ffff" },  // Japanese - cyan  (Yōkoso)
-    { text: "欢迎 (Huānyíng)", color: "#ff3333" },   // Chinese - red
-    { text: "أهلاً وسهلاً", color: "#ffffff" }, // Arabic - white (Ahlan wa sahlan)
-    { text: "Приветствуем", color: "#9966ff" },    // Russian - purple  (Privetstvuem)
-    { text: "환영합니다", color: "#66ffcc" }   // Korean - mint  (Hwanyeonghamnida)
-  ];
+    /* =========================
+       BACKGROUND GLOBE (Canvas)
+       Lightweight, no external libs.
+       Creates: rotating wireframe globe + activity dots + connecting arcs
+       ========================= */
 
-  let messageIndex = 0;
-  let charIndex = 0;
-  const typeSpeed = 100;
-  const eraseSpeed = 50;
-  const delayBetween = 1500;
+    (function () {
+      const canvas = document.getElementById('globe');
+      const ctx = canvas.getContext('2d', { alpha: true });
 
-  const element = document.getElementById("typewriter");
+      let DPR = Math.max(1, window.devicePixelRatio || 1);
+      let W = 0, H = 0;
+      let cx = 0, cy = 0;
+      let last = performance.now();
 
-  function typeWriter() {
-    const current = messages[messageIndex];
-    element.style.transition = "color 0.5s, text-shadow 0.5s, opacity 0.5s";
-    element.style.color = current.color;
-    element.style.textShadow = `0 0 15px ${current.color}, 0 0 30px ${current.color}`;
-    element.style.opacity = 1;
+      // globe params
+      const radiusRatio = 0.28;     // globe radius relative to min(W,H)
+      let globeRadius = 0;
+      let rotation = 0;             // rotation angle (radians)
+      const rotationSpeed = 0.00085; // slow rotation
+      const meridians = 28;
+      const parallels = 14;
 
-    if (charIndex < current.text.length) {
-      element.textContent += current.text.charAt(charIndex);
-      charIndex++;
-      setTimeout(typeWriter, typeSpeed);
-    } else {
-      setTimeout(eraseText, delayBetween);
-    }
-  }
+      // activity
+      const activePoints = []; // {lat, lon, phase, size}
+      const arcs = [];         // {from:{lat,lon}, to:{lat,lon}, progress, speed, color}
 
-  function eraseText() {
-    const current = messages[messageIndex];
-    if (charIndex > 0) {
-      element.textContent = current.text.substring(0, charIndex - 1);
-      charIndex--;
-      setTimeout(eraseText, eraseSpeed);
-    } else {
-      element.style.opacity = 0;
-      messageIndex = (messageIndex + 1) % messages.length;
-      setTimeout(() => {
-        element.textContent = "";
-        typeWriter();
-      }, 500);
-    }
-  }
+      // helper: convert deg->rad
+      const rads = (d) => (d * Math.PI / 180);
 
-  document.addEventListener("DOMContentLoaded", () => {
-    typeWriter();
-  });
+      // lat/lon -> 3d point on unit sphere
+      function latLonToXYZ(lat, lon) {
+        const phi = rads(90 - lat);
+        const theta = rads(lon + 180);
+        const x = Math.sin(phi) * Math.cos(theta);
+        const y = Math.cos(phi);
+        const z = Math.sin(phi) * Math.sin(theta);
+        return { x, y, z };
+      }
 
-  // Fetch only specific repos
-  const wantedRepos = ["Cyber-Write-Up-Fetcher", "Geolocation-IP-Filtering"];
+      // project 3D point onto 2D canvas (simple orthographic projection)
+      function project(x, y, z) {
+        // rotate around Y axis by `rotation`
+        const cosR = Math.cos(rotation);
+        const sinR = Math.sin(rotation);
+        const xr = x * cosR + z * sinR;
+        const zr = -x * sinR + z * cosR; // depth
 
-  fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
-    .then(response => response.json())
-    .then(repos => {
-      const container = document.getElementById("repo-list");
-      repos
-        .filter(repo => wantedRepos.includes(repo.name))
-        .forEach(repo => {
-          const card = document.createElement("div");
-          card.className = "repo-card";
-          card.innerHTML = `
-            <h2>${repo.name}</h2>
-            <p>${repo.description ? repo.description : "No description available."}</p>
-            <a href="${repo.html_url}" target="_blank">View Repository</a>
-          `;
-          container.appendChild(card);
+        // flatten to circle using globeRadius
+        const px = cx + xr * globeRadius;
+        const py = cy + y * globeRadius;
+        return { x: px, y: py, z: zr };
+      }
+
+      function resize() {
+        DPR = Math.max(1, window.devicePixelRatio || 1);
+        W = Math.floor(window.innerWidth);
+        H = Math.floor(window.innerHeight);
+        canvas.width = Math.floor(W * DPR);
+        canvas.height = Math.floor(H * DPR);
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        cx = W * 0.5;
+        cy = H * 0.45;
+        globeRadius = Math.min(W, H) * radiusRatio;
+      }
+
+      // draw ephemeral glow
+      function drawGlow(x, y, r, color, alpha) {
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, `rgba(${color},${alpha})`);
+        g.addColorStop(0.5, `rgba(${color},${alpha*0.25})`);
+        g.addColorStop(1, `rgba(${color},0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      // render meridians (longitudes) and parallels (latitudes)
+      function drawWireframe() {
+        ctx.save();
+        ctx.lineWidth = 1.0;
+        ctx.strokeStyle = 'rgba(0,191,255,0.10)';
+
+        // parallels (latitude circles)
+        for (let i = 1; i <= parallels; i++) {
+          const lat = -90 + (i * 180 / (parallels + 1));
+          ctx.beginPath();
+          for (let j = 0; j <= meridians; j++) {
+            const lon = j * 360 / meridians;
+            const { x, y, z } = latLonToXYZ(lat, lon);
+            const p = project(x, y, z);
+            if (j === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+          }
+          ctx.stroke();
+        }
+
+        // meridians (longitude lines)
+        for (let k = 0; k < meridians; k++) {
+          const lon = k * 360 / meridians;
+          ctx.beginPath();
+          for (let j = 0; j <= parallels; j++) {
+            const lat = -90 + (j * 180 / parallels);
+            const { x, y, z } = latLonToXYZ(lat, lon);
+            const p = project(x, y, z);
+            if (j === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+          }
+          ctx.stroke();
+        }
+
+        // outer sphere rim
+        ctx.beginPath();
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = 'rgba(0,191,255,0.18)';
+        ctx.arc(cx, cy, globeRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      // draw activity points (glowing dots) with depth shading
+      function drawPoints(time) {
+        for (let p of activePoints) {
+          // rotate point over time to add subtle bob
+          const rr = rotation * 0.5 + (p.phase || 0);
+          const { x, y, z } = latLonToXYZ(p.lat, p.lon + rr * 40);
+          const proj = project(x, y, z);
+          // only draw if visible (z > 0 means front hemisphere after rotation)
+          if (proj.z > -0.2) {
+            const depth = (proj.z + 1) * 0.5; // 0..1
+            const size = p.baseSize * (0.6 + 0.8 * depth);
+            drawGlow(proj.x, proj.y, size * 6, '0,255,200', 0.35 * depth);
+            ctx.beginPath();
+            ctx.fillStyle = `rgba(0,255,200,${0.9 * depth})`;
+            ctx.arc(proj.x, proj.y, size * 0.6, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // create an arc path between two lat/lon, animate progress 0..1
+      function drawArcs(time) {
+        for (let i = arcs.length - 1; i >= 0; i--) {
+          const a = arcs[i];
+          a.progress += a.speed * (time - a.lastTime) * 0.001;
+          a.lastTime = time;
+
+          if (a.progress >= 1.0) {
+            // fade out & remove
+            arcs.splice(i, 1);
+            continue;
+          }
+
+          // compute positions
+          const f = latLonToXYZ(a.from.lat, a.from.lon);
+          const t = latLonToXYZ(a.to.lat, a.to.lon);
+          const pf = project(f.x, f.y, f.z);
+          const pt = project(t.x, t.y, t.z);
+
+          // mid point for nice curve (elevate in screen space based on distance)
+          const mx = (pf.x + pt.x) / 2;
+          const my = (pf.y + pt.y) / 2 - globeRadius * 0.25 * Math.abs(Math.sin(a.progress * Math.PI));
+
+          // draw base path (subtle)
+          ctx.beginPath();
+          ctx.lineWidth = 1.0;
+          ctx.strokeStyle = `rgba(${a.color},0.12)`;
+          ctx.moveTo(pf.x, pf.y);
+          ctx.quadraticCurveTo(mx, my, pt.x, pt.y);
+          ctx.stroke();
+
+          // draw bright moving dot along the curve
+          const tpos = a.progress;
+          // quadratic curve point decomposition
+          const qx = (1 - tpos) * (1 - tpos) * pf.x + 2 * (1 - tpos) * tpos * mx + tpos * tpos * pt.x;
+          const qy = (1 - tpos) * (1 - tpos) * pf.y + 2 * (1 - tpos) * tpos * my + tpos * tpos * pt.y;
+
+          // glow and dot
+          drawGlow(qx, qy, 14, a.color, 0.25 + 0.35 * (1 - Math.abs(0.5 - tpos)));
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(${a.color},0.95)`;
+          ctx.arc(qx, qy, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // spawn random active points on globe
+      function spawnPoints(n = 36) {
+        activePoints.length = 0;
+        for (let i = 0; i < n; i++) {
+          activePoints.push({
+            lat: (Math.random() * 180) - 90,
+            lon: (Math.random() * 360) - 180,
+            phase: Math.random() * Math.PI * 2,
+            baseSize: 1 + Math.random() * 2.6
+          });
+        }
+      }
+
+      // spawn arcs between random points on globe
+      function spawnArc() {
+        const pickPoint = () => ({
+          lat: (Math.random() * 140) - 70, // avoid extreme poles for nicer arcs
+          lon: (Math.random() * 360) - 180
         });
-    });
+        const c1 = Math.floor(Math.random() * 155) + 60;
+        const color = `${Math.min(255, c1)},${200},${255 - (c1 % 120)}`; // pastel-ish variations
+        arcs.push({
+          from: pickPoint(),
+          to: pickPoint(),
+          progress: 0,
+          speed: 0.6 + Math.random() * 1.0,
+          color,
+          lastTime: performance.now()
+        });
+        // limit arcs count
+        if (arcs.length > 18) arcs.shift();
+      }
+
+      // render loop
+      function render(now) {
+        const dt = now - last;
+        last = now;
+        rotation += rotationSpeed * dt;
+
+        // clear canvas — dark transparent to preserve blending
+        ctx.clearRect(0, 0, W, H);
+
+        // subtle vignette background circle behind globe
+        const g = ctx.createRadialGradient(cx, cy, globeRadius * 0.2, cx, cy, globeRadius * 1.6);
+        g.addColorStop(0, 'rgba(6,10,20,0.85)');
+        g.addColorStop(1, 'rgba(0,0,0,0.55)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+
+        // draw scanning band (rotating)
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(-rotation * 0.35);
+        ctx.fillStyle = `rgba(0,191,255,0.02)`;
+        ctx.fillRect(-globeRadius * 1.6, -globeRadius * 0.07, globeRadius * 3.2, globeRadius * 0.14);
+        ctx.restore();
+
+        // wireframe
+        drawWireframe();
+
+        // points and arcs
+        drawPoints(now);
+        drawArcs(now);
+
+        // occasional arc spawns & point updates
+        if (Math.random() < 0.025) spawnArc();
+        if (Math.random() < 0.01) {
+          // jitter a few points positions to feel alive
+          for (let p of activePoints) {
+            p.lat += (Math.random() - 0.5) * 0.6;
+            p.lon += (Math.random() - 0.5) * 0.8;
+          }
+        }
+
+        requestAnimationFrame(render);
+      }
+
+      // initialize
+      function init() {
+        resize();
+        spawnPoints(44);
+        last = performance.now();
+        requestAnimationFrame(render);
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+      });
+
+      // high-level pause when tab hidden (saves CPU)
+      let paused = false;
+      document.addEventListener('visibilitychange', () => {
+        paused = document.hidden;
+        if (!paused) {
+          last = performance.now();
+          requestAnimationFrame(render);
+        }
+      });
+
+      init();
+    })();
+
+    /* =========================
+       Typewriter multilang + color sync
+       ========================= */
+
+    (function () {
+      const messages = [
+        { text: "Welcome", color: "#00bfff" },
+        { text: "Selamat Datang", color: "#00ff99" },
+        { text: "Bienvenido", color: "#ffcc00" },
+        { text: "Bienvenue", color: "#ff66ff" },
+        { text: "Willkommen", color: "#ff6600" },
+        { text: "ようこそ (Yōkoso)", color: "#00ffff" },
+        { text: "欢迎 (Huānyíng)", color: "#ff3333" },
+        { text: "أهلاً وسهلاً (Ahlan wa sahlan)", color: "#ffffff" },
+        { text: "Приветствуем (Privetstvuem)", color: "#9966ff" },
+        { text: "환영합니다 (Hwanyeonghamnida)", color: "#66ffcc" }
+      ];
+
+      let messageIndex = 0;
+      let charIndex = 0;
+      const typeSpeed = 80;
+      const eraseSpeed = 40;
+      const delayBetween = 1300;
+      const element = document.getElementById('typewriter');
+
+      function setBodyAccent(color) {
+        // subtle ambient background tint (keeps dark)
+        document.body.style.background = `radial-gradient(circle at top, ${hexWithAlpha(color, 0.06)}, ${'#000'})`;
+      }
+
+      // convert '#rrggbb' to 'r,g,b'
+      function rgbFromHex(hex) {
+        const h = hex.replace('#', '');
+        const r = parseInt(h.substring(0, 2), 16);
+        const g = parseInt(h.substring(2, 4), 16);
+        const b = parseInt(h.substring(4, 6), 16);
+        return `${r},${g},${b}`;
+      }
+
+      function hexWithAlpha(hex, a = 1) {
+        // returns rgba() string of hex color with alpha baked into string for CSS gradient stop
+        const h = hex.replace('#', '');
+        const r = parseInt(h.substring(0, 2), 16);
+        const g = parseInt(h.substring(2, 4), 16);
+        const b = parseInt(h.substring(4, 6), 16);
+        return `rgba(${r},${g},${b},${a})`;
+      }
+
+      function typeWriter() {
+        const current = messages[messageIndex];
+        element.style.transition = 'color 0.45s, text-shadow 0.45s, opacity 0.35s';
+        element.style.color = current.color;
+        element.style.textShadow = `0 0 12px ${current.color}, 0 0 28px ${current.color}`;
+        setBodyAccent(current.color);
+
+        if (charIndex < current.text.length) {
+          element.textContent += current.text.charAt(charIndex);
+          charIndex++;
+          setTimeout(typeWriter, typeSpeed);
+        } else {
+          setTimeout(eraseText, delayBetween);
+        }
+      }
+
+      function eraseText() {
+        const current = messages[messageIndex];
+        if (charIndex > 0) {
+          element.textContent = current.text.substring(0, charIndex - 1);
+          charIndex--;
+          setTimeout(eraseText, eraseSpeed);
+        } else {
+          element.style.opacity = 0;
+          messageIndex = (messageIndex + 1) % messages.length;
+          setTimeout(() => {
+            element.textContent = '';
+            element.style.opacity = 1;
+            typeWriter();
+          }, 350);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        typeWriter();
+      });
+    })();
+
+    /* =========================
+       Repo fetch: only show two specified repos
+       ========================= */
+
+    (function () {
+      const wantedRepos = ["Cyber-Write-Up-Fetcher", "Geolocation-IP-Filtering"];
+      const container = document.getElementById('repo-list');
+
+      // small helper: show a placeholder if fetch fails
+      function showFallback() {
+        container.innerHTML = `
+          <div class="repo-card"><h2>Cyber-Write-Up-Fetcher</h2><p>Feed about Cybersecurity 💻</p><a href="https://github.com/un5eeny0t/Cyber-Write-Up-Fetcher" target="_blank">View Repository</a></div>
+          <div class="repo-card"><h2>Geolocation-IP-Filtering</h2><p>No description available.</p><a href="https://github.com/un5eeny0t/Geolocation-IP-Filtering" target="_blank">View Repository</a></div>
+        `;
+      }
+
+      fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
+        .then(r => {
+          if (!r.ok) throw new Error('GitHub API error');
+          return r.json();
+        })
+        .then(repos => {
+          const filtered = repos.filter(repo => wantedRepos.includes(repo.name));
+          // If GitHub returns none (private or rate-limited), show fallback cards (safe)
+          if (!filtered.length) {
+            showFallback();
+            return;
+          }
+          container.innerHTML = '';
+          // ensure order is same as wantedRepos
+          wantedRepos.forEach(w => {
+            const repo = filtered.find(r => r.name === w);
+            if (repo) {
+              const card = document.createElement('div');
+              card.className = 'repo-card';
+              card.innerHTML = `
+                <h2>${repo.name}</h2>
+                <p>${repo.description ? escapeHtml(repo.description) : 'No description available.'}</p>
+                <a href="${repo.html_url}" target="_blank">View Repository</a>
+              `;
+              container.appendChild(card);
+            } else {
+              // fallback per repo if not returned
+              const fallbackCard = document.createElement('div');
+              fallbackCard.className = 'repo-card';
+              fallbackCard.innerHTML = `
+                <h2>${w}</h2>
+                <p>No description available.</p>
+                <a href="https://github.com/un5eeny0t/${w}" target="_blank">View Repository</a>
+              `;
+              container.appendChild(fallbackCard);
+            }
+          });
+        })
+        .catch(err => {
+          console.warn('Repo fetch failed:', err);
+          showFallback();
+        });
+
+      // tiny helper to avoid markup injection if GitHub description contains HTML
+      function escapeHtml(unsafe) {
+        return unsafe
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+    })();
   </script>
 </body>
 </html>

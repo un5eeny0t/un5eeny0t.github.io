@@ -113,7 +113,7 @@
 <body>
   <header>
     <h1 id="typewriter"></h1>
-    <p>Network Security Engineer | Researcher | Builder of Cyber Tools</p>
+    <p>Network Security Engineer | Researcher</p>
   </header>
 
   <section class="repo-container" id="repo-list">
@@ -126,16 +126,61 @@
 
   <script>
     // Typewriter animation
-    const text = "Welcome to un5eeny0t";
-    let i = 0;
-    function typeWriter() {
-      if (i < text.length) {
-        document.getElementById("typewriter").innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, 100);
-      }
+<script>
+  // List of "Welcome" in different languages with colors
+  const messages = [
+    { text: "Welcome", color: "#00bfff" },           // English - blue
+    { text: "Selamat Datang", color: "#00ff99" },    // Malay - green
+    { text: "Bienvenido", color: "#ffcc00" },        // Spanish - yellow
+    { text: "Bienvenue", color: "#ff66ff" },         // French - pink
+    { text: "Willkommen", color: "#ff6600" },        // German - orange
+    { text: "ようこそ (Yōkoso)", color: "#00ffff" },  // Japanese - cyan
+    { text: "欢迎 (Huānyíng)", color: "#ff3333" },   // Chinese - red
+    { text: "أهلاً وسهلاً (Ahlan wa sahlan)", color: "#ffffff" }, // Arabic - white
+    { text: "Приветствуем (Privetstvuem)", color: "#9966ff" },    // Russian - purple
+    { text: "환영합니다 (Hwanyeonghamnida)", color: "#66ffcc" }   // Korean - mint
+  ];
+
+  let messageIndex = 0;
+  let charIndex = 0;
+  const typeSpeed = 100;   // typing speed
+  const eraseSpeed = 50;   // erasing speed
+  const delayBetween = 1500; // pause before erasing
+
+  const element = document.getElementById("typewriter");
+
+  function typeWriter() {
+    const current = messages[messageIndex];
+    element.style.transition = "color 0.5s, text-shadow 0.5s";
+    element.style.color = current.color;
+    element.style.textShadow = `0 0 15px ${current.color}, 0 0 30px ${current.color}`;
+
+    if (charIndex < current.text.length) {
+      element.textContent += current.text.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeWriter, typeSpeed);
+    } else {
+      setTimeout(eraseText, delayBetween);
     }
+  }
+
+  function eraseText() {
+    const current = messages[messageIndex];
+    if (charIndex > 0) {
+      element.textContent = current.text.substring(0, charIndex - 1);
+      charIndex--;
+      setTimeout(eraseText, eraseSpeed);
+    } else {
+      messageIndex = (messageIndex + 1) % messages.length;
+      setTimeout(typeWriter, 500);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
     typeWriter();
+  });
+</script>
+
 
     // Fetch repos dynamically
     fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")

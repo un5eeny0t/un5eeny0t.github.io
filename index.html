@@ -1,76 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>un5eeny0t</title>
-    <style>
-        /* General Styling */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>un5eeny0t</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #0f0f1a, #000);
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-        /* Fade-in animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    header {
+      margin-top: 60px;
+      text-align: center;
+      animation: fadeIn 1.5s ease-out forwards;
+    }
 
-        /* Container */
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 400px;
-            opacity: 0;
-            animation: fadeIn 1s ease-out forwards;
-        }
+    h1 {
+      font-size: 2.8em;
+      color: #00bfff;
+      text-shadow: 0 0 15px #00bfff, 0 0 25px #0080ff;
+      margin: 0;
+      animation: glowPulse 3s infinite alternate;
+    }
 
-        /* Heading */
-        h1 {
-            margin: 0;
-            font-size: 2em;
-            color: #222;
-            transition: transform 0.3s ease-in-out;
-        }
+    @keyframes glowPulse {
+      from { text-shadow: 0 0 10px #00bfff, 0 0 20px #0080ff; }
+      to { text-shadow: 0 0 25px #00bfff, 0 0 50px #0040ff; }
+    }
 
-        /* Subtext */
-        p {
-            font-size: 1em;
-            color: #666;
-            margin-top: 10px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out forwards;
-        }
+    p {
+      font-size: 1.1em;
+      color: #aaa;
+      margin-top: 10px;
+      animation: fadeIn 2s ease-in-out;
+    }
 
-        /* Hover effect */
-        h1:hover {
-            transform: scale(1.1);
-            color: #007bff;
-        }
-    </style>
+    .repo-container {
+      margin-top: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 90%;
+      max-width: 1000px;
+      padding-bottom: 60px;
+    }
+
+    .repo-card {
+      background: rgba(20, 20, 35, 0.8);
+      border: 1px solid #00bfff55;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+    }
+
+    .repo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+      border-color: #00bfff;
+    }
+
+    .repo-card h2 {
+      font-size: 1.2em;
+      margin: 0 0 10px 0;
+      color: #00bfff;
+    }
+
+    .repo-card p {
+      font-size: 0.9em;
+      color: #bbb;
+    }
+
+    .repo-card a {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: #00bfff;
+      border: 1px solid #00bfff;
+      border-radius: 6px;
+      padding: 5px 10px;
+      transition: 0.3s;
+    }
+
+    .repo-card a:hover {
+      background: #00bfff;
+      color: #000;
+    }
+
+    footer {
+      color: #666;
+      font-size: 0.9em;
+      padding: 20px;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome!</h1>
-        <p>Simple. Clean. Animated.</p>
-    </div>
+  <header>
+    <h1 id="typewriter"></h1>
+    <p>Network Security Engineer | Researcher | Builder of Cyber Tools</p>
+  </header>
+
+  <section class="repo-container" id="repo-list">
+    <!-- Repos will load here -->
+  </section>
+
+  <footer>
+    © 2025 un5eeny0t | <a href="https://github.com/un5eeny0t" style="color:#00bfff;">GitHub</a>
+  </footer>
+
+  <script>
+    // Typewriter animation
+    const text = "Welcome to un5eeny0t";
+    let i = 0;
+    function typeWriter() {
+      if (i < text.length) {
+        document.getElementById("typewriter").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 100);
+      }
+    }
+    typeWriter();
+
+    // Fetch repos dynamically
+    fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
+      .then(response => response.json())
+      .then(repos => {
+        const container = document.getElementById("repo-list");
+        repos.forEach(repo => {
+          const card = document.createElement("div");
+          card.className = "repo-card";
+          card.innerHTML = `
+            <h2>${repo.name}</h2>
+            <p>${repo.description ? repo.description : "No description available."}</p>
+            <a href="${repo.html_url}" target="_blank">View Repository</a>
+          `;
+          container.appendChild(card);
+        });
+      });
+  </script>
 </body>
 </html>

@@ -22,7 +22,17 @@
     header {
       margin-top: 60px;
       text-align: center;
-      animation: fadeIn 1.5s ease-out forwards;
+      opacity: 1;
+    }
+
+    #typewriter {
+      display: inline-block;
+      min-height: 1.2em;
+      vertical-align: middle;
+      line-height: 1.2em;
+      animation: none !important;
+      will-change: contents;
+      transition: opacity 0.5s ease-in-out;
     }
 
     h1 {
@@ -42,7 +52,6 @@
       font-size: 1.1em;
       color: #aaa;
       margin-top: 10px;
-      animation: fadeIn 2s ease-in-out;
     }
 
     .repo-container {
@@ -103,11 +112,6 @@
       padding: 20px;
       text-align: center;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
   </style>
 </head>
 <body>
@@ -144,13 +148,15 @@
   const typeSpeed = 100;
   const eraseSpeed = 50;
   const delayBetween = 1500;
+
   const element = document.getElementById("typewriter");
 
   function typeWriter() {
     const current = messages[messageIndex];
-    element.style.transition = "color 0.5s, text-shadow 0.5s";
+    element.style.transition = "color 0.5s, text-shadow 0.5s, opacity 0.5s";
     element.style.color = current.color;
     element.style.textShadow = `0 0 15px ${current.color}, 0 0 30px ${current.color}`;
+    element.style.opacity = 1;
 
     if (charIndex < current.text.length) {
       element.textContent += current.text.charAt(charIndex);
@@ -168,35 +174,39 @@
       charIndex--;
       setTimeout(eraseText, eraseSpeed);
     } else {
+      element.style.opacity = 0;
       messageIndex = (messageIndex + 1) % messages.length;
-      setTimeout(typeWriter, 500);
+      setTimeout(() => {
+        element.textContent = "";
+        typeWriter();
+      }, 500);
     }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
     typeWriter();
-
-    // Fetch only specific repos
-    const wantedRepos = ["Cyber-Write-Up-Fetcher", "Geolocation-IP-Filtering"];
-
-    fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
-      .then(response => response.json())
-      .then(repos => {
-        const container = document.getElementById("repo-list");
-        repos
-          .filter(repo => wantedRepos.includes(repo.name))
-          .forEach(repo => {
-            const card = document.createElement("div");
-            card.className = "repo-card";
-            card.innerHTML = `
-              <h2>${repo.name}</h2>
-              <p>${repo.description ? repo.description : "No description available."}</p>
-              <a href="${repo.html_url}" target="_blank">View Repository</a>
-            `;
-            container.appendChild(card);
-          });
-      });
   });
+
+  // Fetch only specific repos
+  const wantedRepos = ["Cyber-Write-Up-Fetcher", "Geolocation-IP-Filtering"];
+
+  fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
+    .then(response => response.json())
+    .then(repos => {
+      const container = document.getElementById("repo-list");
+      repos
+        .filter(repo => wantedRepos.includes(repo.name))
+        .forEach(repo => {
+          const card = document.createElement("div");
+          card.className = "repo-card";
+          card.innerHTML = `
+            <h2>${repo.name}</h2>
+            <p>${repo.description ? repo.description : "No description available."}</p>
+            <a href="${repo.html_url}" target="_blank">View Repository</a>
+          `;
+          container.appendChild(card);
+        });
+    });
   </script>
 </body>
 </html>

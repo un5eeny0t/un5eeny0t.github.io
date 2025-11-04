@@ -141,10 +141,9 @@
 
   let messageIndex = 0;
   let charIndex = 0;
-  const typeSpeed = 100;   // typing speed
-  const eraseSpeed = 50;   // erasing speed
-  const delayBetween = 1500; // pause before erasing
-
+  const typeSpeed = 100;
+  const eraseSpeed = 50;
+  const delayBetween = 1500;
   const element = document.getElementById("typewriter");
 
   function typeWriter() {
@@ -176,45 +175,28 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     typeWriter();
-  });
-    
-    // Fetch repos dynamically
-//   fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
-//     .then(response => response.json())
-//    .then(repos => {
-//       const container = document.getElementById("repo-list");
-//      repos.forEach(repo => {
-//          const card = document.createElement("div");
-//         card.className = "repo-card";
-//          card.innerHTML = `
-//           <h2>${repo.name}</h2>
-//            <p>${repo.description ? repo.description : "No description available."}</p>
-//            <a href="${repo.html_url}" target="_blank">View Repository</a>
-//          `;
-//          container.appendChild(card);
-      // Fetch only specific repos
-  const wantedRepos = ["Cyber-Write-Up-Fetcher", "Geolocation-IP-Filtering"];
 
-  fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
-    .then(response => response.json())
-    .then(repos => {
-      const container = document.getElementById("repo-list");
-      repos
-        .filter(repo => wantedRepos.includes(repo.name))
-        .forEach(repo => {
-          const card = document.createElement("div");
-          card.className = "repo-card";
-          card.innerHTML = `
-            <h2>${repo.name}</h2>
-            <p>${repo.description ? repo.description : "No description available."}</p>
-            <a href="${repo.html_url}" target="_blank">View Repository</a>
-          `;
-          container.appendChild(card);
-        });
-    });
+    // Fetch only specific repos
+    const wantedRepos = ["Cyber-Write-Up-Fetcher", "Geolocation-IP-Filtering"];
 
-        });
+    fetch("https://api.github.com/users/un5eeny0t/repos?sort=updated")
+      .then(response => response.json())
+      .then(repos => {
+        const container = document.getElementById("repo-list");
+        repos
+          .filter(repo => wantedRepos.includes(repo.name))
+          .forEach(repo => {
+            const card = document.createElement("div");
+            card.className = "repo-card";
+            card.innerHTML = `
+              <h2>${repo.name}</h2>
+              <p>${repo.description ? repo.description : "No description available."}</p>
+              <a href="${repo.html_url}" target="_blank">View Repository</a>
+            `;
+            container.appendChild(card);
+          });
       });
+  });
   </script>
 </body>
 </html>
